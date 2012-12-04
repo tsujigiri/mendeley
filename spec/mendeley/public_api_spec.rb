@@ -10,7 +10,7 @@ describe "Mendeley" do
       it "should have a base_url" do
         Documents.base_url.should == "http://api.mendeley.com/oapi/documents/"
       end
-      
+
       describe ".build_request_url" do
         it "should return /search/<terms>" do
           Documents.send(:build_request_url, "/search").should == "http://api.mendeley.com/oapi/documents/search?consumer_key="
@@ -20,17 +20,25 @@ describe "Mendeley" do
       describe ".search" do
         it "should search documents for the string for marcio" do
           response = JSON.generate({:result => "success"})
-          RestClient.expects(:get).with() do |request| 
+          RestClient.expects(:get).with() do |request|
             request.should == "http://api.mendeley.com/oapi/documents/search/marcio%20von%20muhlen?consumer_key="
           end.returns(response)
           Documents.search("marcio von muhlen")
+        end
+
+        it "should page through the search results" do
+          response = JSON.generate({:result => "success"})
+          RestClient.expects(:get).with() do |request|
+            request.should == "http://api.mendeley.com/oapi/documents/search/marcio%20von%20muhlen?consumer_key=&items=123&page=5"
+          end.returns(response)
+          Documents.search("marcio von muhlen", { items: 123, page: 5 })
         end
       end
 
       describe ".authored_by" do
         it "should search for document with a given author" do
           response = JSON.generate({:result => "success"})
-          RestClient.expects(:get).with() do |request| 
+          RestClient.expects(:get).with() do |request|
             request.should == "http://api.mendeley.com/oapi/documents/authored/marcio%20von%20muhlen?consumer_key="
           end.returns(response)
           Documents.authored_by("marcio von muhlen")
@@ -40,7 +48,7 @@ describe "Mendeley" do
       describe ".document_details" do
         it "should return the details of a document do" do
           response = JSON.generate({:result => "success"})
-          RestClient.expects(:get).with() do |request| 
+          RestClient.expects(:get).with() do |request|
             request.should == "http://api.mendeley.com/oapi/documents/details/15?consumer_key="
           end.returns(response)
           Documents.document_details("15")

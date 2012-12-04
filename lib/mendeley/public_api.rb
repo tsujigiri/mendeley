@@ -1,7 +1,7 @@
 module Mendeley
   module API
     def request(sub_url, params = nil)
-      request = build_request_url(sub_url ,params)
+      request = build_request_url(sub_url, params)
       JSON.parse(RestClient.get(request))
     end
 
@@ -36,8 +36,8 @@ module Mendeley
       end
 
       #Search all documents using the public API for the given term
-      def self.search(term)
-        request(File.join("search", URI.escape(term)))
+      def self.search(term, options = {})
+        request(File.join("search", URI.escape(term)), options)
       end
 
       #Fetch the detailed description of the document from mendeley
