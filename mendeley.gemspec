@@ -21,6 +21,6 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'mocha'
-  s.add_dependency 'rest-client'
+  s.add_dependency 'rest-client', '>= 1.8.0' # see https://github.com/rest-client/rest-client/issues/369
   s.add_dependency 'yajl-ruby'
 end
